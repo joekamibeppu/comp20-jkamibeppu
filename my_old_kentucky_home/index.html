@@ -12,13 +12,12 @@
 
 <video src="https://www.cs.tufts.edu/comp/20/my_old_kentucky_home.mp4" id="music_video" controls></video>
 <div id="lyrics"></div>
-<div id="Image"></div>
 
 <script type="text/javascript">
 
 	var video = document.getElementById("music_video");
 	var lyrics = document.getElementById("lyrics");
-	var image = document.getElementById("Image")
+	var image = document.getElementById("Image");
 
 	video.addEventListener("timeupdate", function() {
 
@@ -29,7 +28,7 @@
 			lyrics.innerHTML = "<p> 'Tis summer, the people are gay </p>";
 		}
 		//else if (video.currentTime > 21 && video.currentTime <= 28) {
-		//	lyrics.innerHTML = "<p><img src="corn_fields.jpg" alt="Corn Field" /></p>";
+		//	lyrics.innerHTML = "<p><img src="corn_fields.jpg" alt="image" /></p>";
 		//}
 		else if (video.currentTime > 28 && video.currentTime <= 35) {
 			lyrics.innerHTML = "<p> While the birds make music all the day </p>";
@@ -56,7 +55,7 @@
 			lyrics.innerHTML = "<p> We will sing one song </p>";
 		}
 		//else if (video.currentTime > 79 && video.currentTime <= 82) {
-		//	lyrics.innerHTML = "<p><img src="fried_chicken.jpg" alt="Fried Chicken" /></p>";
+		//	lyrics.innerHTML = "<p><img src="fried_chicken.jpg" alt="image" /></p>";
 		//}
 		else if (video.currentTime > 82 && video.currentTime <= 92) {
 			lyrics.innerHTML = "<p> For My Old Kentucky Home, far away </p>";

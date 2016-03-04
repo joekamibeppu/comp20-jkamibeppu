@@ -12,21 +12,59 @@
 
 <video src="https://www.cs.tufts.edu/comp/20/my_old_kentucky_home.mp4" id="music_video" controls></video>
 <div id="lyrics"></div>
+<div id="Image"></div>
 
-<script>
-	
+<script type="text/javascript">
+
 	var video = document.getElementById("music_video");
 	var lyrics = document.getElementById("lyrics");
-	var timer = document.getElementById("timer");
+	var image = document.getElementById("Image")
 
-	video.addEventListener("timeupdate", func() {
-		timer.innerHTML = video.currentTime;
+	video.addEventListener("timeupdate", function() {
 
-		if (video.currentTime < 8) {
-			lyrics.innerHTML = "<p> is this working? </p>";
+		if (video.currentTime > 8 && video.currentTime <= 14) {
+			lyrics.innerHTML = "<p> The sun shines bright in My Old Kentucky Home </p>";
 		} 
+		else if (video.currentTime > 14 && video.currentTime <= 21) {
+			lyrics.innerHTML = "<p> 'Tis summer, the people are gay </p>";
+		}
+		//else if (video.currentTime > 21 && video.currentTime <= 28) {
+		//	lyrics.innerHTML = "<p><img src="corn_fields.jpg" alt="Corn Field" /></p>";
+		//}
+		else if (video.currentTime > 28 && video.currentTime <= 35) {
+			lyrics.innerHTML = "<p> While the birds make music all the day </p>";
+		}
+		else if (video.currentTime > 35 && video.currentTime <= 42) {
+			lyrics.innerHTML = "<p> The young folks roll on the little cabin floor </p>";
+		}
+		else if (video.currentTime > 42 && video.currentTime <= 49) {
+			lyrics.innerHTML = "<p> All merry, all happy and bright </p>";
+		}
+		else if (video.currentTime > 49 && video.currentTime <= 55) {
+			lyrics.innerHTML = "<p> By 'n' by hard times comes a knocking at the door </p>";
+		}
+		else if (video.currentTime > 55 && video.currentTime <= 63) {
+			lyrics.innerHTML = "<p> Then My Old Kentucky Home, good night!</p>";
+		}
+		else if (video.currentTime > 64 && video.currentTime <= 69) {
+			lyrics.innerHTML = "<p> Weep no more my lady</p>";
+		}
+		else if (video.currentTime > 69 && video.currentTime <= 75) {
+			lyrics.innerHTML = "<p> Oh weep no more today </p>";
+		}
+		else if (video.currentTime > 75 && video.currentTime <= 79) {
+			lyrics.innerHTML = "<p> We will sing one song </p>";
+		}
+		//else if (video.currentTime > 79 && video.currentTime <= 82) {
+		//	lyrics.innerHTML = "<p><img src="fried_chicken.jpg" alt="Fried Chicken" /></p>";
+		//}
+		else if (video.currentTime > 82 && video.currentTime <= 92) {
+			lyrics.innerHTML = "<p> For My Old Kentucky Home, far away </p>";
+		} else {
 
-	}, true);
+		}
+
+	}, false);
 
 </script>
 </body>

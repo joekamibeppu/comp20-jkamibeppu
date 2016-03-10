@@ -1,1 +1,16 @@
-/* Your CSS here... */
+/* 
+	style.css
+
+	created by: Joe Kamibeppu
+	created on: March 5, 2016
+*/
+
+h1 {
+	font-family: Georgia;
+	font-weight: lighter;
+}
+
+#messages {
+	font-style: oblique;
+	background-color: red;
+}

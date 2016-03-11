@@ -16,9 +16,9 @@ function parse() {
 		if (request.readyState == 4 && request.status == 200) {
 			var messages = JSON.parse(request.responseText);
 			document.getElementById("messages").innerHTML = 
-			messages[0].content + &nbsp + messages[0].username + "<br>" 
+			messages[0].content + "\xa0" + messages[0].username + "<br>" 
 			+ "<br>" + 
-			messages[1].content + "   " + messages[1].username + "<br>";
+			messages[1].content + "\xa0" + messages[1].username + "<br>";
 		}
 	}
 

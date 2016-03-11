@@ -7,13 +7,15 @@
 
 function parse() {
 
-	var request = new XMLHttpRequest();
-	var data = "data.json";
+	request = new XMLHttpRequest();
 
-	request.open("GET", data, true);
+	request.open("GET", "data.json", true);
+
+
 
 	request.onreadystatechange = function() {
 		if (request.readyState == 4 && request.status == 200) {
+
 			var messages = JSON.parse(request.responseText);
 			
 			document.getElementById("messages").innerHTML = 
@@ -24,5 +26,4 @@ function parse() {
 	}
 
 	request.send();
-
 }

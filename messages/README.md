@@ -3,7 +3,7 @@ Joe Kamibeppu
 
 1. The lab has been implemented correctly. The Messages webpage displays two lines of text.
 
-2. I consulted Stack Overflow to learn the syntax of the JSON parser function.
+2. I consulted Stack Overflow to learn the syntax of the JSON parser function. I also discussed the lab will fellow classmate Anna Kasagawa.
 
 3. I have spent 3 hours completing this assignment.
 

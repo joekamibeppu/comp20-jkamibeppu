@@ -25,6 +25,8 @@
 			var marker;
 			var infowindow = new google.maps.InfoWindow();
 
+			var polyIsDisplayed = false;
+
 			var lastInfoWindow = null;
 
 			var nearestLandmark = ({
@@ -102,12 +104,6 @@
 						  });
 
 						  path.setMap(map);
-
-				});
-
-				google.maps.event.addListener(marker, 'close', function()
-				{
-
 
 				});
 

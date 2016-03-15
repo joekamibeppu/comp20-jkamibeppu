@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<title>Geolocation Map Example</title>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+		<link rel="stylesheet" href="style.css" />
+		
+		<script>
+			var myLat = 0;
+			var myLng = 0;
+			var me = new google.maps.LatLng(myLat, myLng);
+			var myOptions = {
+						zoom: 13,
+						center: me,
+						mapTypeId: google.maps.MapTypeId.ROADMAP
+					};
+			var map;
+			var marker;
+			var infowindow = new google.maps.InfoWindow();
+			
+			function init()
+			{
+				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+				getMyLocation();
+			}
+			
+			function getMyLocation() {
+				if (navigator.geolocation) { 
+					navigator.geolocation.getCurrentPosition( function(position) {
+						myLat = position.coords.latitude;
+						myLng = position.coords.longitude;
+						renderMap();
+					});
+				}
+				else {
+					alert("Geolocation is not supported by your web browser.  What a shame!");
+				}
+			}
+
+			function renderMap()
+			{
+				me = new google.maps.LatLng(myLat, myLng);
+				// Update map and go there...
+				map.panTo(me);
+				
+				// Create a marker
+				marker = new google.maps.Marker({
+					position: me,
+					title: "Here I Am!",
+					icon: "me.png"
+				});
+				marker.setMap(map);
+					
+				// Open info window on click of marker
+				google.maps.event.addListener(marker, 'click', function() {
+					infowindow.setContent(marker.title);
+					infowindow.open(map, marker);
+				});
+
+				sendRequest();
+			}
+
+/*********************************************************************************************/
+/*********************************************************************************************/
+/*********************************************************************************************/
+
+			function sendRequest() 
+			{
+			var url = "https://defense-in-derpth.herokuapp.com/sendLocation";
+
+			var credentials = "login=MIA_WALTON&lat=" + myLat + "&lng=" + myLng;
+
+			var request = new XMLHttpRequest();
+
+			request.open("POST", url, true);
+
+			request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+			request.onreadystatechange = callback;
+
+			request.send(credentials);
+
+			function callback () {
+				if (request.readyState == 4 && request.status == 200) {
+
+					var jresp = JSON.parse(request.responseText);
+
+					console.log(jresp);
+				
+					for (i = 0; i < jresp.people.length; i++) {
+
+						/********** USER MARKERS *************/
+
+						if (jresp.people[i].login != "MIA_WALTON") {
+
+						userPosi = new google.maps.LatLng(jresp.people[i].lat, jresp.people[i].lng);
+
+						userInfo = new google.maps.InfoWindow({
+							content: jresp.people[i].login
+						});
+
+						userMark = new google.maps.Marker({
+							position: userPosi,
+							title: jresp.people[i].login,
+							infowindow: userInfo,
+							icon: "others.png"
+						});
+
+						google.maps.event.addListener(userMark, 'click', function() {
+							this.infowindow.open(map, this);
+						});
+
+						userMark.setMap(map);
+					}
+					}
+
+					for (j = 0; j < jresp.landmarks.length; j++) {
+
+						/********* LANDMARKS **********/ 
+						
+						landPosi = new google.maps.LatLng(jresp.landmarks[j].geometry.coordinates[1], jresp.landmarks[j].geometry.coordinates[0]);
+
+						landInfo = new google.maps.InfoWindow({
+							content: jresp.landmarks[j].properties.Details, 
+						});
+
+
+						landMark = new google.maps.Marker({
+							position: landPosi,
+							title: jresp.landmarks[j].properties.Location_Name,
+							infowindow: landInfo,
+							icon: "landmarks.png"
+						});
+
+						google.maps.event.addListener(landMark, 'click', function() {
+							this.infowindow.open(map, this);
+						});
+
+						landMark.setMap(map);
+
+					}
+
+				}
+				}
+			}
+
+		</script>
+	</head>
+
+	<body onload="init()">
+		<div id="map_canvas"></div>
+	</body>
+</html>

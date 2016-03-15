@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 
+<!-- COMP20 Assignment 2: Historic Landmarks -->
+<!-- Joe Kamibeppu -->
+<!-- March 14, 2016 -->
+
 <html>
 
 	<head>
@@ -20,6 +24,15 @@
 			var map;
 			var marker;
 			var infowindow = new google.maps.InfoWindow();
+
+			var lastInfoWindow = null;
+
+			var nearestLandmark = ({
+				distance: 238900,
+				lat: 0,
+				lng: 0,
+				name: null
+			});
 			
 			function init()
 			{
@@ -27,15 +40,16 @@
 				getMyLocation();
 			}
 			
-			function getMyLocation() {
+			function getMyLocation() 
+			{
 				if (navigator.geolocation) { 
 					navigator.geolocation.getCurrentPosition( function(position) {
 						myLat = position.coords.latitude;
 						myLng = position.coords.longitude;
-						renderMap();
+						sendRequest();
+
 					});
-				}
-				else {
+				} else {
 					alert("Geolocation is not supported by your web browser.  What a shame!");
 				}
 			}
@@ -45,107 +59,183 @@
 				me = new google.maps.LatLng(myLat, myLng);
 				// Update map and go there...
 				map.panTo(me);
-				
+
+				contentString = "The closest landmark is " + nearestLandmark.name + " located " + nearestLandmark.distance + " miles away.";
+
+				meInfo = new google.maps.InfoWindow({
+					content: contentString, 
+				});
 				// Create a marker
 				marker = new google.maps.Marker({
 					position: me,
-					title: "Here I Am!",
+					title: "MIA_WALTON",
+					infowindow: meInfo,
 					icon: "me.png"
 				});
+
 				marker.setMap(map);
+
 					
 				// Open info window on click of marker
 				google.maps.event.addListener(marker, 'click', function() {
-					infowindow.setContent(marker.title);
-					infowindow.open(map, marker);
+
+						if (lastInfoWindow == null) {
+							this.infowindow.open(map, this);
+							lastInfoWindow = this;
+						} else { 
+							lastInfoWindow.infowindow.close();
+							this.infowindow.open(map, this);
+							lastInfoWindow = this;
+						}
+
+						var meToLandmark = [
+    						{lat: myLat, lng: myLng},
+  						 	{lat: nearestLandmark.lat, lng: nearestLandmark.lng},
+ 						];
+
+						  var path = new google.maps.Polyline({
+						    path: meToLandmark,
+						    geodesic: true,
+						    strokeColor: '#FF0000',
+						    strokeOpacity: 1.0,
+						    strokeWeight: 2
+						  });
+
+						  path.setMap(map);
+
+				});
+
+				google.maps.event.addListener(marker, 'close', function()
+				{
+
+
 				});
 
 				sendRequest();
 			}
 
-/*********************************************************************************************/
-/*********************************************************************************************/
-/*********************************************************************************************/
-
 			function sendRequest() 
 			{
-			var url = "https://defense-in-derpth.herokuapp.com/sendLocation";
+				var url = "https://defense-in-derpth.herokuapp.com/sendLocation";
+				var credentials = "login=MIA_WALTON&lat=" + myLat + "&lng=" + myLng;
+				var request = new XMLHttpRequest();
 
-			var credentials = "login=MIA_WALTON&lat=" + myLat + "&lng=" + myLng;
+				request.open("POST", url, true);
+				request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				request.onreadystatechange = callback;
+				request.send(credentials);			
 
-			var request = new XMLHttpRequest();
+				function callback () 
+				{
+					if (request.readyState == 4 && request.status == 200) {
 
-			request.open("POST", url, true);
+						var jresp = JSON.parse(request.responseText);
 
-			request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							for (i = 0; i < jresp.people.length; i++) {
+								if (jresp.people[i].login != "MIA_WALTON") {
+									userPosi = new google.maps.LatLng(jresp.people[i].lat, jresp.people[i].lng);
+									distance = getDistance(myLat, myLng,jresp.people[i].lat, jresp.people[i].lng);
+									contentString = jresp.people[i].login + " is " + distance + " miles away from you."; 
 
-			request.onreadystatechange = callback;
+									userInfo = new google.maps.InfoWindow({
+										content: contentString
+									});
 
-			request.send(credentials);
+									userMark = new google.maps.Marker({
+										position: userPosi,
+										title: jresp.people[i].login,
+										infowindow: userInfo,
+										icon: "others.png"
+									});
 
-			function callback () {
-				if (request.readyState == 4 && request.status == 200) {
+									google.maps.event.addListener(userMark, 'click', function() {
+										if (lastInfoWindow == null) {
+											this.infowindow.open(map, this);
+											lastInfoWindow = this;
+										} else { 
+											lastInfoWindow.infowindow.close();
+											this.infowindow.open(map, this);
+											lastInfoWindow = this;
+										}
+									});
 
-					var jresp = JSON.parse(request.responseText);
-
-					console.log(jresp);
-				
-					for (i = 0; i < jresp.people.length; i++) {
-
-						/********** USER MARKERS *************/
-
-						if (jresp.people[i].login != "MIA_WALTON") {
-
-						userPosi = new google.maps.LatLng(jresp.people[i].lat, jresp.people[i].lng);
-
-						userInfo = new google.maps.InfoWindow({
-							content: jresp.people[i].login
-						});
-
-						userMark = new google.maps.Marker({
-							position: userPosi,
-							title: jresp.people[i].login,
-							infowindow: userInfo,
-							icon: "others.png"
-						});
-
-						google.maps.event.addListener(userMark, 'click', function() {
-							this.infowindow.open(map, this);
-						});
-
-						userMark.setMap(map);
-					}
-					}
-
-					for (j = 0; j < jresp.landmarks.length; j++) {
-
-						/********* LANDMARKS **********/ 
+									userMark.setMap(map);
+								}
+							}
 						
-						landPosi = new google.maps.LatLng(jresp.landmarks[j].geometry.coordinates[1], jresp.landmarks[j].geometry.coordinates[0]);
 
-						landInfo = new google.maps.InfoWindow({
-							content: jresp.landmarks[j].properties.Details, 
-						});
+						for (j = 0; j < jresp.landmarks.length; j++) {
+							
+							landPosi = new google.maps.LatLng(jresp.landmarks[j].geometry.coordinates[1], jresp.landmarks[j].geometry.coordinates[0]);
+
+							landInfo = new google.maps.InfoWindow({
+								content: jresp.landmarks[j].properties.Details, 
+							});
 
 
-						landMark = new google.maps.Marker({
-							position: landPosi,
-							title: jresp.landmarks[j].properties.Location_Name,
-							infowindow: landInfo,
-							icon: "landmarks.png"
-						});
+							landMark = new google.maps.Marker({
+								position: landPosi,
+								title: jresp.landmarks[j].properties.Location_Name,
+								infowindow: landInfo,
+								icon: "landmarks.png"
+							});
 
-						google.maps.event.addListener(landMark, 'click', function() {
-							this.infowindow.open(map, this);
-						});
+							google.maps.event.addListener(landMark, 'click', function() {
+								if (lastInfoWindow == null) {
+									this.infowindow.open(map, this);
+									lastInfoWindow = this;
+								} else { 
+									lastInfoWindow.infowindow.close();
+									this.infowindow.open(map, this);
+									lastInfoWindow = this;
+								}
+							});
 
-						landMark.setMap(map);
+							if (getDistance(myLat, myLng, jresp.landmarks[j].geometry.coordinates[1], jresp.landmarks[j].geometry.coordinates[0]) < nearestLandmark.distance) {
+
+								console.log("gets here");
+									nearestLandmark.distance = getDistance(myLat, myLng, jresp.landmarks[j].geometry.coordinates[1], jresp.landmarks[j].geometry.coordinates[0]);
+									nearestLandmark.lat = jresp.landmarks[j].geometry.coordinates[1];
+									nearestLandmark.lng = jresp.landmarks[j].geometry.coordinates[0];
+									nearestLandmark.name = jresp.landmarks[j].properties.Location_Name;
+							}
+
+							landMark.setMap(map);
 
 					}
+					renderMap();
+				}
 
 				}
+
+				function getDistance(lati1, long1, lati2, long2) 
+				{
+					Number.prototype.toRad = function() {
+					   return this * Math.PI / 180;
+					}
+
+					var lat2 = lati2; 
+					var lon2 = long2; 
+					var lat1 = lati1; 
+					var lon1 = long1; 
+
+					var R = 6371; // km 
+					//has a problem with the .toRad() method below.
+					var x1 = lat2-lat1;
+					var dLat = x1.toRad();  
+					var x2 = lon2-lon1;
+					var dLon = x2.toRad();  
+					var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+					                Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+					                Math.sin(dLon/2) * Math.sin(dLon/2);  
+					var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+					var d = (R * c) / 1.609344; 
+
+					return d;
 				}
 			}
+
+			
 
 		</script>
 	</head>

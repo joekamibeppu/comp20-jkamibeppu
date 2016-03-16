@@ -26,10 +26,10 @@
 			var marker;
 			var infowindow = new google.maps.InfoWindow();
 
-			var lastInfoWindow = null; // indicates whether infoWindow is currently displayed
+			var currentInfoWindow = null; // indicates whether infoWindow is currently displayed
 
 			var nearestLandmark = ({
-				distance: 238900,
+				distance: 238900,         // the moon!
 				lat: 0,
 				lng: 0,
 				name: null
@@ -77,13 +77,13 @@
 
 				google.maps.event.addListener(marker, 'click', function() 
 				{
-					if (lastInfoWindow == null) {
+					if (currentInfoWindow == null) {
 						this.infowindow.open(map, this);
-						lastInfoWindow = this;
+						currentInfoWindow = this;
 					} else { 
-						lastInfoWindow.infowindow.close(); // close any open windows
+						currentInfoWindow.infowindow.close(); // close any open windows
 						this.infowindow.open(map, this);
-						lastInfoWindow = this;
+						currentInfoWindow = this;
 					}
 
 					var meToLandmark = [
@@ -145,13 +145,13 @@
 									});
 
 									google.maps.event.addListener(userMark, 'click', function() {
-										if (lastInfoWindow == null) {
+										if (currentInfoWindow == null) {
 											this.infowindow.open(map, this);
-											lastInfoWindow = this;
+											currentInfoWindow = this;
 										} else { 
-											lastInfoWindow.infowindow.close();
+											currentInfoWindow.infowindow.close();
 											this.infowindow.open(map, this);
-											lastInfoWindow = this;
+											currentInfoWindow = this;
 										}
 									});
 									userMark.setMap(map);
@@ -179,13 +179,13 @@
 
 								google.maps.event.addListener(landMark, 'click', function() 
 								{
-									if (lastInfoWindow == null) {
+									if (currentInfoWindow == null) {
 										this.infowindow.open(map, this);
-										lastInfoWindow = this;
+										currentInfoWindow = this;
 									} else { 
-										lastInfoWindow.infowindow.close();
+										currentInfoWindow.infowindow.close();
 										this.infowindow.open(map, this);
-										lastInfoWindow = this;
+										currentInfoWindow = this;
 									}
 								});
 

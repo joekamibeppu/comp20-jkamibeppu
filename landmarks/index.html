@@ -130,8 +130,8 @@
 										jsonData.people[i].lng);
 									distance = getDistance(myLat, myLng,jsonData.people[i].lat, 
 										jsonData.people[i].lng);
-									contentString = "<h2>"jsonData.people[i].login + "</h2> is <h2>" + 
-										distance + "</h2> miles away from you."; 
+									contentString = "<h2>" + jsonData.people[i].login + "</h2> is <h2>" + 
+										distance + "</h2>miles away from you."; 
 
 									userInfo = new google.maps.InfoWindow({
 										content: contentString

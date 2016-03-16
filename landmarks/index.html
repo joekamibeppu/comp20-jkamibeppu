@@ -8,7 +8,7 @@
 <html>
 
 	<head>
-		<title>Geolocation Map Example</title>
+		<title>Historic Landmarks</title>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
 		<link rel="stylesheet" href="style.css" />
@@ -59,7 +59,7 @@
 				me = new google.maps.LatLng(myLat, myLng);
 				map.panTo(me);
 
-				contentString = "The closest landmark is <h1>" + nearestLandmark.name + 
+				contentString = "You are MIA_WALTON! The closest landmark to you is <h1>" + nearestLandmark.name + 
 					"</h1> located " + nearestLandmark.distance + " miles away.";
 
 				meInfo = new google.maps.InfoWindow({
@@ -75,6 +75,21 @@
 
 				marker.setMap(map);
 
+				var meToLandmark = [
+    				{lat: myLat, lng: myLng},
+  					{lat: nearestLandmark.lat, lng: nearestLandmark.lng},
+ 				];
+
+				var pathToLandmark = new google.maps.Polyline({
+					path: meToLandmark,
+					geodesic: true,
+					strokeColor: '#FF00FF',
+					strokeOpacity: 2.0,
+					strokeWeight: 5
+				});
+
+				pathToLandmark.setMap(map);
+
 				google.maps.event.addListener(marker, 'click', function() 
 				{
 					if (currentInfoWindow == null) {
@@ -85,22 +100,6 @@
 						this.infowindow.open(map, this);
 						currentInfoWindow = this;
 					}
-
-					var meToLandmark = [
-    					{lat: myLat, lng: myLng},
-  						{lat: nearestLandmark.lat, lng: nearestLandmark.lng},
- 					];
-
-					var pathToLandmark = new google.maps.Polyline({
-						path: meToLandmark,
-						geodesic: true,
-						strokeColor: '#FF00FF',
-						strokeOpacity: 2.0,
-						strokeWeight: 5
-					});
-
-					pathToLandmark.setMap(map);
-
 				});
 			}
 

@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 
 <!-- COMP20 Assignment 2: Historic Landmarks -->
-<!-- Joe Kamibeppu -->
-<!-- March 14, 2016 -->
+<!-- This document was adopted from an assignment example by Professor Ming Chow. -->
+<!-- Modified by: Joe Kamibeppu              -->
+<!-- Modified on: March 14, 2016             -->
 
 <html>
 
 	<head>
 		<title>Geolocation Map Example</title>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
 		<link rel="stylesheet" href="style.css" />
 		
 		<script>
@@ -25,9 +26,7 @@
 			var marker;
 			var infowindow = new google.maps.InfoWindow();
 
-			var polyIsDisplayed = false;
-
-			var lastInfoWindow = null;
+			var lastInfoWindow = null; // indicates whether infoWindow is currently displayed
 
 			var nearestLandmark = ({
 				distance: 238900,
@@ -49,7 +48,6 @@
 						myLat = position.coords.latitude;
 						myLng = position.coords.longitude;
 						sendRequest();
-
 					});
 				} else {
 					alert("Geolocation is not supported by your web browser.  What a shame!");
@@ -59,15 +57,15 @@
 			function renderMap()
 			{
 				me = new google.maps.LatLng(myLat, myLng);
-				// Update map and go there...
 				map.panTo(me);
 
-				contentString = "The closest landmark is " + nearestLandmark.name + " located " + nearestLandmark.distance + " miles away.";
+				contentString = "The closest landmark is <h1>" + nearestLandmark.name + 
+					"</h1> located " + nearestLandmark.distance + " miles away.";
 
 				meInfo = new google.maps.InfoWindow({
 					content: contentString, 
 				});
-				// Create a marker
+
 				marker = new google.maps.Marker({
 					position: me,
 					title: "MIA_WALTON",
@@ -77,37 +75,33 @@
 
 				marker.setMap(map);
 
-					
-				// Open info window on click of marker
-				google.maps.event.addListener(marker, 'click', function() {
+				google.maps.event.addListener(marker, 'click', function() 
+				{
+					if (lastInfoWindow == null) {
+						this.infowindow.open(map, this);
+						lastInfoWindow = this;
+					} else { 
+						lastInfoWindow.infowindow.close(); // close any open windows
+						this.infowindow.open(map, this);
+						lastInfoWindow = this;
+					}
 
-						if (lastInfoWindow == null) {
-							this.infowindow.open(map, this);
-							lastInfoWindow = this;
-						} else { 
-							lastInfoWindow.infowindow.close();
-							this.infowindow.open(map, this);
-							lastInfoWindow = this;
-						}
+					var meToLandmark = [
+    					{lat: myLat, lng: myLng},
+  						{lat: nearestLandmark.lat, lng: nearestLandmark.lng},
+ 					];
 
-						var meToLandmark = [
-    						{lat: myLat, lng: myLng},
-  						 	{lat: nearestLandmark.lat, lng: nearestLandmark.lng},
- 						];
+					var pathToLandmark = new google.maps.Polyline({
+						path: meToLandmark,
+						geodesic: true,
+						strokeColor: '#FF00FF',
+						strokeOpacity: 2.0,
+						strokeWeight: 5
+					});
 
-						  var path = new google.maps.Polyline({
-						    path: meToLandmark,
-						    geodesic: true,
-						    strokeColor: '#FF0000',
-						    strokeOpacity: 1.0,
-						    strokeWeight: 2
-						  });
-
-						  path.setMap(map);
+					pathToLandmark.setMap(map);
 
 				});
-
-				sendRequest();
 			}
 
 			function sendRequest() 
@@ -121,17 +115,23 @@
 				request.onreadystatechange = callback;
 				request.send(credentials);			
 
-				function callback () 
+				function callback() 
 				{
 					if (request.readyState == 4 && request.status == 200) {
+						var jsonData = JSON.parse(request.responseText);
+						createPeopleMarkers();
+						createLandmarkMarkers();
 
-						var jresp = JSON.parse(request.responseText);
-
-							for (i = 0; i < jresp.people.length; i++) {
-								if (jresp.people[i].login != "MIA_WALTON") {
-									userPosi = new google.maps.LatLng(jresp.people[i].lat, jresp.people[i].lng);
-									distance = getDistance(myLat, myLng,jresp.people[i].lat, jresp.people[i].lng);
-									contentString = jresp.people[i].login + " is " + distance + " miles away from you."; 
+						function createPeopleMarkers()
+						{
+							for (i = 0; i < jsonData.people.length; i++) {
+								if (jsonData.people[i].login != "MIA_WALTON") {
+									userPosi = new google.maps.LatLng(jsonData.people[i].lat, 
+										jsonData.people[i].lng);
+									distance = getDistance(myLat, myLng,jsonData.people[i].lat, 
+										jsonData.people[i].lng);
+									contentString = "<h2>"jsonData.people[i].login + "</h2> is <h2>" + 
+										distance + "</h2> miles away from you."; 
 
 									userInfo = new google.maps.InfoWindow({
 										content: contentString
@@ -139,7 +139,7 @@
 
 									userMark = new google.maps.Marker({
 										position: userPosi,
-										title: jresp.people[i].login,
+										title: jsonData.people[i].login,
 										infowindow: userInfo,
 										icon: "others.png"
 									});
@@ -154,57 +154,58 @@
 											lastInfoWindow = this;
 										}
 									});
-
 									userMark.setMap(map);
 								}
 							}
+						}
 						
+						function createLandmarkMarkers()
+						{
+							for (j = 0; j < jsonData.landmarks.length; j++) {
+								landmarkLat = jsonData.landmarks[j].geometry.coordinates[1];
+								landmarkLng = jsonData.landmarks[j].geometry.coordinates[0];
+								landPosi = new google.maps.LatLng(landmarkLat, landmarkLng);
 
-						for (j = 0; j < jresp.landmarks.length; j++) {
-							
-							landPosi = new google.maps.LatLng(jresp.landmarks[j].geometry.coordinates[1], jresp.landmarks[j].geometry.coordinates[0]);
+								landInfo = new google.maps.InfoWindow({
+									content: jsonData.landmarks[j].properties.Details, 
+								});
 
-							landInfo = new google.maps.InfoWindow({
-								content: jresp.landmarks[j].properties.Details, 
-							});
+								landMark = new google.maps.Marker({
+									position: landPosi,
+									title: jsonData.landmarks[j].properties.Location_Name,
+									infowindow: landInfo,
+									icon: "landmarks.png"
+								});
 
+								google.maps.event.addListener(landMark, 'click', function() 
+								{
+									if (lastInfoWindow == null) {
+										this.infowindow.open(map, this);
+										lastInfoWindow = this;
+									} else { 
+										lastInfoWindow.infowindow.close();
+										this.infowindow.open(map, this);
+										lastInfoWindow = this;
+									}
+								});
 
-							landMark = new google.maps.Marker({
-								position: landPosi,
-								title: jresp.landmarks[j].properties.Location_Name,
-								infowindow: landInfo,
-								icon: "landmarks.png"
-							});
-
-							google.maps.event.addListener(landMark, 'click', function() {
-								if (lastInfoWindow == null) {
-									this.infowindow.open(map, this);
-									lastInfoWindow = this;
-								} else { 
-									lastInfoWindow.infowindow.close();
-									this.infowindow.open(map, this);
-									lastInfoWindow = this;
+								if (getDistance(myLat, myLng, landmarkLat, landmarkLng) 
+									< nearestLandmark.distance) {
+									nearestLandmark.distance = getDistance(myLat, myLng, 
+										landmarkLat, landmarkLng);
+									nearestLandmark.lat = landmarkLat;
+									nearestLandmark.lng = landmarkLng;
+									nearestLandmark.name = jsonData.landmarks[j].properties.Location_Name;
 								}
-							});
 
-							if (getDistance(myLat, myLng, jresp.landmarks[j].geometry.coordinates[1], jresp.landmarks[j].geometry.coordinates[0]) < nearestLandmark.distance) {
-
-								console.log("gets here");
-									nearestLandmark.distance = getDistance(myLat, myLng, jresp.landmarks[j].geometry.coordinates[1], jresp.landmarks[j].geometry.coordinates[0]);
-									nearestLandmark.lat = jresp.landmarks[j].geometry.coordinates[1];
-									nearestLandmark.lng = jresp.landmarks[j].geometry.coordinates[0];
-									nearestLandmark.name = jresp.landmarks[j].properties.Location_Name;
+								landMark.setMap(map);
 							}
 
-							landMark.setMap(map);
-
-					}
-					renderMap();
+							renderMap();
+						}
 				}
 
-				}
-
-				function getDistance(lati1, long1, lati2, long2) 
+				function getDistance(lati1, long1, lati2, long2)  // Hoversine Formula
 				{
 					Number.prototype.toRad = function() {
 					   return this * Math.PI / 180;
@@ -230,13 +231,12 @@
 					return d;
 				}
 			}
-
-			
-
+		}
 		</script>
 	</head>
 
 	<body onload="init()">
 		<div id="map_canvas"></div>
 	</body>
+
 </html>

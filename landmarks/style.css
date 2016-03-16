@@ -1,14 +1,23 @@
 /*
 	style.css
 
-	created by: Joe Kamibeppu
-	created on: March 12, 2016
+	Adopted from assignment example from Professor Ming Chow.
 */
 
 
 html {
 	height: 100%;
 	font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
+}
+
+h1 {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+h2 {
+	font-size: 12px;
+	font-weight: bold;
 }
 
 body {

@@ -9,10 +9,18 @@
 		/******** OUTLINE *********/
 
 		$( document ).ready(function() {
+
 			for (var key in localStorage) {
-				// jQuery prepend
-				//(selector).prepend (content, fuctions)
+				$("#log").prepend(localStorage[key]);
 			}
+
+			$("#msg").change(function() {
+				var logAddition = Date.now();
+				$("#log").prepend(logAddition);
+			})
+
+			// right now ... prepends without space and its ASCII values???
+
 		});
 
 		// get data

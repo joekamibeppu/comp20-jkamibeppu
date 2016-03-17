@@ -2,6 +2,11 @@
 
 1. The assignment has been implemented correctly.
 
-2. I did not collaborate with anyone for this assignment.
+2. I viewed the following StackOverflow pages to verify syntax for the jQuery methods prepend, ready and change, and learn more about the Date object and localStorage object.
+
+http://www.w3schools.com/jquery/html_prepend.asp
+http://www.w3schools.com/jquery/event_change.asp
+http://stackoverflow.com/questions/3552461/how-to-format-a-javascript-date
+http://stackoverflow.com/questions/8419354/get-html5-localstorage-keys
 
 3. I have spent approximately 2 hours on this assignment.

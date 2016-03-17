@@ -25,6 +25,7 @@
 				var logAddition = logTime + " - " + $("#msg").val() + "<br>";
 				$("#log").prepend(logAddition);
 				localStorage[logTime] = logAddition;
+				$("#msg").val("");
 			});
 		});
 

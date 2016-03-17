@@ -1,21 +1,33 @@
 <!DOCTYPE html>
 
+<!-- Modified by: Joe Kamibeppu -->
+<!-- Modified on: Mar 17, 2016  -->
+
 <html>
 
 <head>
 	<title>Captain's Log</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<script>
+
 		$(document).ready(function() {
+
+			/* publish all existing logs */
+
 			for (var key in localStorage) {
 				$("#log").prepend(localStorage[key]);
 			}
+
+			/* handle all new logs */
+
 			$("#msg").change(function() {
-				var logAddition = Date.now() + " - " + $("#msg").val() + "<br>";
+				var logTime = new Date();
+				var logAddition = logTime + " - " + $("#msg").val() + "<br>";
 				$("#log").prepend(logAddition);
-				localStorage[Date.now()] = logAddition;
+				localStorage[logTime] = logAddition;
 			});
 		});
+
 	</script>
 </head>
 

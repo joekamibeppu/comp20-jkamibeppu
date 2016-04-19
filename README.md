@@ -5,3 +5,4 @@ Root repository for Joe Kamibeppu
 - messages: contains files for lab 6 - messages
 - captainslog: contains files for lab 7 - Captain's Log
 - landmarks: contains file for assignment 2 - historic landmarks
+- security: contains files for assignment 4 - security assessment

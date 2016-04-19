@@ -11,8 +11,6 @@ function parse() {
 
 	request.open("GET", "data.json", true);
 
-
-
 	request.onreadystatechange = function() {
 		if (request.readyState == 4 && request.status == 200) {
 

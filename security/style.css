@@ -1,0 +1,82 @@
+/*	
+	style.css
+
+	created by: Joe Kamibeppu
+	created on: Feb 4, 2016
+*/
+@import url('http://fonts.googleapis.com/css?family=Merriweather');
+
+h1 {
+		font-size: 40px;
+		font-family: "Merriweather", sans-serif;
+		text-align: center;
+}
+
+h2 {
+		font-size: 28px;
+		font-family: "Merriweather", sans-serif;
+}
+
+h3 {
+		font-size: 20px;
+		font-weight: bold;
+		font-family: "Merriweather", sans-serif;
+		margin-top: 0;
+		margin-bottom: 0;
+}
+
+img {
+		text-align: center;
+}
+
+a.link:link, a.link:visited {
+		text-decoration: none;
+		color: black;
+}
+
+a.link:hover {
+		text-decoration: underline;
+}
+
+a.link:active {
+		color: red;
+}
+
+body {
+		margin-left: 10%;
+		margin-right: 10%;
+		font-size: 16px;
+		line-height: 1.25;
+		font-family: "Merriweather", sans-serif;
+}
+
+p {
+		margin-top: 0;
+		margin-bottom: 0;
+}
+
+li {
+		margin: 0 0 10px 0;
+}
+
+.index {
+		font-size: 30px;
+		font-weight: bold;
+		text-align: center;
+}
+
+.bio {
+		margin-left: 25%;
+		margin-right: 25%;
+		font-size: 16px;
+}
+
+.contactinfo {
+		font-size: 20px;
+}
+
+.bold {
+		font-weight: bold;
+		margin-top: 0;
+		margin-bottom: 0;
+}

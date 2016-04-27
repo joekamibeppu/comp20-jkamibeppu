@@ -39,11 +39,11 @@
 
 <h2> Methodology </h2>
 
-<p> I first performed black box testing - I attacked my client's web application without reading the source code. Using Postman, I attempted to add unexpected user input to the web application such as image files, JavaScript, and links to other sites. Then, I viewed my partner's source code to look for potential server-side vulnerabilities. </p>
+<p> I first performed black box testing - I attacked my client's web application without reading the source code. Using Postman, I attempted to inject unexpected user input to the web application such as image files, JavaScript, and links to other sites. Then, I viewed my partner's source code to look for potential server-side vulnerabilities. </p>
 
 <h2> Abstract of Findings </h2>
 
-<p> My partner's web application was correctly implemented, and followed the specifications of assignment 3. Since the specs did not include any privacy protection or security measures, however, I found 3 vulnerabilities in his web application. First, I found that the web application openly distributes personal information on all of its users. While this may be in part because of the nature of the application, it is risky to leave so much personal information out in the open. Second, I found that the web application is susceptible to attacks based on malicious user input. Third, the web application is at risk of being flooded with user requests.</p>
+<p> My partner's web application was correctly implemented, and followed the specifications of assignment 3. Since the specs did not include any privacy protection or security measures, however, I found 3 vulnerabilities in his web application. First, I found that the web application openly displays personal information on all of its users. While this may be in part because of the nature of the application, it is risky to leave so much personal information out in the open. Second, I found that the web application is susceptible to attacks based on malicious user input. Third, the web application is at risk of being flooded with user requests.</p>
 
 <h2> Security Issues Found </h2>
 
@@ -85,12 +85,16 @@
 	<li> A denial-of-service attack attempts to flood a web application with requests to the point of unusability. The attackers aim to overwhelm the web server with requests until it reaches its capacity. A distributed denial-of-service attack can occur when multiple machines and users attack a web server at once. A denial-of-service attack can also be undertaken by single user using software such as Stacheldraht.</li>
 	<li> The web application in question is susceptible to a denial-of-service attack because its source code does not set a limit for the number of requests a user (IP address) can make in a certain period of time.</li>
 	<li> Potential denial-of-service attacks can be discouraged by limiting the number of requests from a given machine in a certain period of time. Protecting against DDoS attacks from multiple IP addresses may prove more difficult.</li>
-	<li> Heroku-hosted web applications can add dynos to accomodate heavier request loads. While increasing the web server's hosting capability may not prevent DoS attacks, it will help the server handle heavier traffic. </lI>2
+	<li> Heroku-hosted web applications can add dynos to accomodate heavier request loads. While increasing the web server's hosting capability may not prevent DoS attacks, it will help the server handle heavier traffic. </li>
 </ul>
 
 <h2> Conclusion </h2>
 
 <p> The Historic Landmarks server is susceptible to several privacy and security issues, including unnecessary personal information exposure, cross-site scripting, and denial-of-service attacks. These problems can be addressed using password protection, user input validation and sanitation, and limiting the number of requests from a given IP address. While preventing DDoS attacks may be difficult, the load capacity of Heroku-based web applications can be increased by purchasing additional dynos. For example, 10 additional dynos cost $400.</p>
+
+<br>
+<br>
+<br>
 </body>
 
 </html>
